@@ -1,0 +1,7 @@
+out
+
+test/data
+test/out
+
+libnifti.a
+ex-example*
