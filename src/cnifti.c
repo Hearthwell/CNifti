@@ -188,21 +188,24 @@ struct Nifti2DSlice cnifti_slice_copy(const struct Nifti2DSlice *slice){
     return copy;
 }
 
-void cnifti_slice_as_float(struct Nifti2DSlice *slice){
+struct Nifti2DSlice cnifti_copy_slice_as_float(const struct Nifti2DSlice *slice){
+    struct Nifti2DSlice result;
+    memcpy(&result, slice, sizeof(struct Nifti2DSlice));
+    result.reference = false;
     void *values = slice->values;
     const unsigned int size = slice->width * slice->height * sizeof(float);
-    slice->values = malloc(size);
+    result.values = malloc(size);
     const int dt_size = nifti_dt2size(slice->dt);
     for(unsigned int i = 0; i < slice->width * slice->height; i++){
-        ((float*)slice->values)[i] = nifti_get_val_float(slice->dt, ((uint8_t*)values) + dt_size * i);
+        ((float*)result.values)[i] = nifti_get_val_float(slice->dt, ((uint8_t*)values) + dt_size * i);
     }
-    slice->dt = NT_FLOAT;
-    free(values);
+    result.dt = NT_FLOAT;
+    return result;
 }
 
 int cnifti_export_slice_img(const char *path, const struct Nifti2DSlice *slice){
     if(slice->dt != NT_FLOAT){
-        printf("CNIFTI EXPORT SLICE AS JPG REQUIRES THE DATA TO BE IN FLOAT FORMAT, CONVERT USING cnifti_slice_as_float\n");
+        printf("CNIFTI EXPORT SLICE AS JPG REQUIRES THE DATA TO BE IN FLOAT FORMAT, CONVERT USING cnifti_copy_slice_as_float\n");
         return CNIFTI_DATATYPE_ERROR;
     }
     /* TODO, MAYBE NORMALIZE USING (val - mean / std) INSTEAD OF MAX AND MIN */

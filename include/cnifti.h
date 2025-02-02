@@ -101,7 +101,7 @@ int cnifti_load(const char *path, struct NiftiImage *img);
 void cnifti_print(const struct NiftiImage *nifti);
 struct Nifti2DSlice cnifti_slice(struct NiftiImage *nifti, unsigned int zIndex);
 struct Nifti2DSlice cnifti_slice_copy(const struct Nifti2DSlice *slice);
-void cnifti_slice_as_float(struct Nifti2DSlice *slice);
+struct Nifti2DSlice cnifti_copy_slice_as_float(const struct Nifti2DSlice *slice);
 int cnifti_export_slice_img(const char *path, const struct Nifti2DSlice *slice);
 
 void cnifti_slice_free(struct Nifti2DSlice *slice);

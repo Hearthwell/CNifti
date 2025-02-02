@@ -13,10 +13,10 @@ int main(){
 
     cnifti_print(&img);
     struct Nifti2DSlice slice = cnifti_slice(&img, img.hdr.dim[3] / 2);
-    struct Nifti2DSlice copy = cnifti_slice_copy(&slice);
-    cnifti_slice_as_float(&copy);
+    struct Nifti2DSlice copy = cnifti_copy_slice_as_float(&slice);
     
     cnifti_export_slice_img("test/out/output.png", &copy);
+    printf("FINISHED IMAGE OUTPUT OF SLICE\n");
 
     cnifti_slice_free(&copy);
     cnifti_free(&img);
