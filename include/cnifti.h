@@ -1,4 +1,5 @@
 #ifndef CNIFTI_H
+#define CNIFTI_H
 
 #include <stdint.h>
 #include <stdbool.h>

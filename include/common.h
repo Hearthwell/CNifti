@@ -1,4 +1,5 @@
 #ifndef CNIFTI_COMMON_H
+#define CNIFTI_COMMON_H
 
 #define CNIFTI_SIMPLE_ERROR -1
 #define CNIFTI_FILE_ERROR -2
