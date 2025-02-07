@@ -99,6 +99,7 @@ struct Nifti2DSlice{
 };
 
 int cnifti_load(const char *path, struct NiftiImage *img);
+int cnifti_load_as_float(const char *path, struct NiftiImage *img);
 void cnifti_print(const struct NiftiImage *nifti);
 struct Nifti2DSlice cnifti_slice(struct NiftiImage *nifti, unsigned int zIndex);
 struct Nifti2DSlice cnifti_slice_copy(const struct Nifti2DSlice *slice);

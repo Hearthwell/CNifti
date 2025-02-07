@@ -5,9 +5,12 @@ C_FLAGS:=-Wall -Wextra -g
 C_INC:=-I./include
 C_LNK:=-lm
 
-all: ex-example1 nifti
+all: ex-example1 ex-example2 nifti
 
 ex-example1: out/example1.c.o $(OBJ_FILES)
+	gcc $^ -o $@ $(C_LNK)
+
+ex-example2: out/example2.c.o $(OBJ_FILES)
 	gcc $^ -o $@ $(C_LNK)
 
 nifti: $(OBJ_FILES)
@@ -24,4 +27,4 @@ out/%.c.o:examples/%.c
 
 clean:
 	rm -rf out/*
-	rm -f libnifti.a ex-example1
+	rm -f libnifti.a ex-example1 ex-example2

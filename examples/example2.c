@@ -9,16 +9,15 @@
 int main(){
 
     struct NiftiImage img;
-    if(cnifti_load(NIFTI_IMG_PATH, &img)) return 1;
+    if(cnifti_load_as_float(NIFTI_IMG_PATH, &img)) return 1;
 
     cnifti_print(&img);
+    /* NO NEED TO TRANSFORM SLICE TO FLOAT SINCE WE LOADED THE ENTIRE MODEL AS FLOAT */
     struct Nifti2DSlice slice = cnifti_slice(&img, img.hdr.dim[3] / 2);
-    struct Nifti2DSlice copy = cnifti_copy_slice_as_float(&slice);
     
-    cnifti_export_slice_img("test/out/output1.png", &copy);
+    cnifti_export_slice_img("test/out/output2.png", &slice);
     printf("FINISHED IMAGE OUTPUT OF SLICE\n");
 
-    cnifti_slice_free(&copy);
     cnifti_free(&img);
     return 0;
 }

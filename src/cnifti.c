@@ -138,6 +138,22 @@ int cnifti_load(const char *path, struct NiftiImage *img){
     return 0;
 }
 
+int cnifti_load_as_float(const char *path, struct NiftiImage *img){
+    int status;
+    if((status = cnifti_load(path, img)) != 0) return status;
+    uint8_t *previous = img->data;
+    unsigned int size = 1;
+    for(unsigned int i = 0; i < img->hdr.dim[0]; i++) size *= img->hdr.dim[i + 1];
+    img->data = malloc(size * sizeof(float));
+    const unsigned int dt_size = nifti_dt2size(img->hdr.datatype);
+    for(unsigned int i = 0; i < size; i++)
+        ((float*)img->data)[i] = nifti_get_val_float(img->hdr.datatype, ((uint8_t*)previous) + dt_size * i);
+    img->hdr.datatype = NT_FLOAT;
+    img->slice_bsize = size * sizeof(float) / img->hdr.dim[img->hdr.dim[0]];
+    free(previous);
+    return 0;
+}
+
 void cnifti_print(const struct NiftiImage *nifti){
     printf("######### NIFTI HEADER #######\n");
     printf("header size: %d\n", nifti->hdr.hdr_size);
