@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "common.h"
 #include "cnifti.h"
@@ -177,6 +178,22 @@ void cnifti_print(const struct NiftiImage *nifti){
     printf("[%.3f, %.3f, %.3f, %.3f]\n", nifti->hdr.srow_z[0], nifti->hdr.srow_z[1], nifti->hdr.srow_z[2], nifti->hdr.srow_z[3]);
     printf("[0.000, 0.000, 0.000, 1]\n");
     printf("End hdr string: %s\n", nifti->hdr.mstring);
+}
+
+/* FORKS ONLY FOR DATATYPES WHICH THE CONVERSION TO FLOAT IS IMPLEMENTED */
+struct NiftiImageMetrics cnifiti_compute_metrics(const struct NiftiImage *nifti){
+    struct NiftiImageMetrics metrics = {.mean = 0.f, .std = 0.f};
+    const unsigned int dt_size = nifti_dt2size(nifti->hdr.datatype);
+    unsigned int size = 1;
+    for(unsigned int i = 0; i < nifti->hdr.dim[0]; i++) size *= nifti->hdr.dim[i + 1];
+    for(unsigned int i = 0; i < size; i++){
+        float current = nifti_get_val_float(nifti->hdr.datatype, nifti->data + i * dt_size);
+        metrics.mean += current / (float)size;
+        metrics.std += (current * current) / (float)size;
+    }
+    metrics.std -= metrics.mean * metrics.mean;
+    metrics.std = sqrtf(metrics.std);
+    return metrics;
 }
 
 struct Nifti2DSlice cnifti_slice(struct NiftiImage *nifti, unsigned int zIndex){

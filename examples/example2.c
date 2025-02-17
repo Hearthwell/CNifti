@@ -10,6 +10,8 @@ int main(){
 
     struct NiftiImage img;
     if(cnifti_load_as_float(NIFTI_IMG_PATH, &img)) return 1;
+    struct NiftiImageMetrics metrics = cnifiti_compute_metrics(&img);
+    printf("IMAGE METRICS => [MEAN: %f, STD: %f]\n", metrics.mean, metrics.std);
 
     cnifti_print(&img);
     /* NO NEED TO TRANSFORM SLICE TO FLOAT SINCE WE LOADED THE ENTIRE MODEL AS FLOAT */

@@ -1,7 +1,7 @@
 out
-
 test/data
 test/out
+test/nib
 
 libnifti.a
 ex-example*

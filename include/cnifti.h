@@ -89,6 +89,11 @@ struct NiftiImage{
     void *data;
 };
 
+struct NiftiImageMetrics{
+    float std;
+    float mean;
+};
+
 struct Nifti2DSlice{
     enum NiftiDataType dt;
     unsigned int width, height;
@@ -101,6 +106,7 @@ struct Nifti2DSlice{
 int cnifti_load(const char *path, struct NiftiImage *img);
 int cnifti_load_as_float(const char *path, struct NiftiImage *img);
 void cnifti_print(const struct NiftiImage *nifti);
+struct NiftiImageMetrics cnifiti_compute_metrics(const struct NiftiImage *nifti);
 struct Nifti2DSlice cnifti_slice(struct NiftiImage *nifti, unsigned int zIndex);
 struct Nifti2DSlice cnifti_slice_copy(const struct Nifti2DSlice *slice);
 struct Nifti2DSlice cnifti_copy_slice_as_float(const struct Nifti2DSlice *slice);
