@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <float.h>
 
 #include "common.h"
 #include "cnifti.h"
@@ -182,7 +183,7 @@ void cnifti_print(const struct NiftiImage *nifti){
 
 /* FORKS ONLY FOR DATATYPES WHICH THE CONVERSION TO FLOAT IS IMPLEMENTED */
 struct NiftiImageMetrics cnifiti_compute_metrics(const struct NiftiImage *nifti){
-    struct NiftiImageMetrics metrics = {.mean = 0.f, .std = 0.f};
+    struct NiftiImageMetrics metrics = {.mean = 0.f, .std = 0.f, .min = FLT_MAX, .max = 0.f};
     const unsigned int dt_size = nifti_dt2size(nifti->hdr.datatype);
     unsigned int size = 1;
     for(unsigned int i = 0; i < nifti->hdr.dim[0]; i++) size *= nifti->hdr.dim[i + 1];
@@ -190,6 +191,8 @@ struct NiftiImageMetrics cnifiti_compute_metrics(const struct NiftiImage *nifti)
         float current = nifti_get_val_float(nifti->hdr.datatype, nifti->data + i * dt_size);
         metrics.mean += current / (float)size;
         metrics.std += (current * current) / (float)size;
+        if(metrics.min > current) metrics.min = current;
+        if(metrics.max < current) metrics.max = current;
     }
     metrics.std -= metrics.mean * metrics.mean;
     metrics.std = sqrtf(metrics.std);

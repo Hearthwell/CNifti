@@ -90,8 +90,8 @@ struct NiftiImage{
 };
 
 struct NiftiImageMetrics{
-    float std;
-    float mean;
+    float std, mean;
+    float min, max;
 };
 
 struct Nifti2DSlice{
